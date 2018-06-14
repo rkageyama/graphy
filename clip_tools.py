@@ -1,1 +1,0 @@
-../PythonModules/clip_tools.py
