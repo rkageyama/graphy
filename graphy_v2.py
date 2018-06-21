@@ -1,8 +1,18 @@
+
 import pandas as pd
+# import numpy as np
+# from matplotlib import pyplot as plt
+# from matplotlib import gridspec
+# from matplotlib.patches import Rectangle
+# from matplotlib import rc
+# import matplotlib.patches as mpatches
+# import subprocess
+# from operator import itemgetter
+#import seaborn as sns
 import itertools
 import sys
 import os
-import spectra # pip install spectra is not working 
+import spectra
 if sys.version_info[0] < 3: 
     from StringIO import StringIO
 else:
@@ -18,20 +28,6 @@ import ipywidgets as widgets
 from IPython.display import display
 from ipywidgets import FloatSlider
 from IPython.display import clear_output
-
-import boto
-import pandas as pd
-
-
-######These environemental variables need to be hidden from the user##############
-os.environ["AWS_ACCESS_KEY_ID"] = 'AKIAI3FPA3UATWJTZB6Q'##########################
-os.environ["AWS_SECRET_ACCESS_KEY"] = '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'##
-######These environemental variables need to be hidden from the user##############
-
-
-
-
-
 
 
 updates = "\
@@ -56,16 +52,16 @@ updates = "\
 
 
 bedfiles_allowed = {"Peaks":{"name":"Peaks",
-                          "bedfile":"/Users/DarthRNA/Documents/Robin/FASTUTR/peaks.bed",
-                          "bedtype":"bed"},
-               "Targetscan":{"name":"Targetscan",
-                          "bedfile":file_targetscan,
-                          "bedtype":"targetscan"}}
+                             "bedfile":"/Users/DarthRNA/Documents/Robin/FASTUTR/peaks.bed",
+                             "bedtype":"bed"},
+                    "Targetscan":{"name":"Targetscan",
+                                  "bedfile":file_targetscan,
+                                  "bedtype":"targetscan"}}
 
 
 
 ### Lookup 3'UTR by Refseq
-df_refseq_3utr = pd.read_table("s3:graphy/genomes/mm10_refseq_3utr.bed",names=['chrom','start','stop','name','score','strand'])
+df_refseq_3utr = pd.read_table("/Users/DarthRNA/Documents/Robin/genomes/mm10_refseq_3utr.bed",names=['chrom','start','stop','name','score','strand'])
 df_refseq_3utr.name = ["_".join(x.split("_")[0:2]) for x in df_refseq_3utr.name]
 df_refseq_3utr = df_refseq_3utr.drop_duplicates("name")
 df_refseq_3utr = df_refseq_3utr.set_index("name")
@@ -133,7 +129,7 @@ page1 = widgets.VBox(children=[hboxdefaultfolder])
 accord = widgets.Accordion(children=[page1], width="80%")
 display(accord)
 
-accord.set_title(1, 'Defaults')
+accord.set_title(0, 'Defaults')
 
 
 #### Define Widgets ###
@@ -227,18 +223,8 @@ interact(printer,
          continuous_update=False)
 
 
-#Lists the contents of 'GRAPHY_TEST' into list_dir_default_track_folder
-import boto3
-s3 = boto3.resource('s3')
-my_bucket = s3.Bucket('graphy')
-list_dir_default_track_folder = []
-for object in my_bucket.objects.all():
-    if str(object.key)[0:11] == 'GRAPHY_TEST':
-            if str(object.key)[12:] != '':
-                list_dir_default_track_folder.append(str(object.key)[12:])
-
 ### Select File ###
-all_files = list_dir_default_track_folder
+all_files = os.listdir(default_track_folder)
 file_types = ["bam","bw"]
 file_names = []
 for f in all_files:

@@ -1,3 +1,5 @@
+
+
 import pandas as pd
 import numpy as np
 from matplotlib import pyplot as plt
@@ -364,7 +366,7 @@ def get_depth_data(track_files,track_names,chrom,start,stop,strand,track_type):
         return subprocess.Popen(("samtools", "view",
                                          strand_to_flag[use_strand],   
                                          "-b",track_file,
-                                         region), stderr=subprocess.PIPE,stdout=subprocess.PIPE)
+                                         region),stderr=subprocess.PIPE,stdout=subprocess.PIPE)
     mydepths = pd.DataFrame([0]*(stop-start+1),index=range(start,stop+1),columns=["depth"])
     depth_list = pd.DataFrame(0,index=range(start,stop),columns=track_names)
     strandinvert = {"+":"-","-":"+"}
@@ -376,7 +378,7 @@ def get_depth_data(track_files,track_names,chrom,start,stop,strand,track_type):
         if track_type[n] == "as":
             use_strand = strandinvert[strand]
         # Get sequences from a given region (in binary bam format still)
-        ps =view_region(track_file, strand_to_flag[use_strand],region)
+        ps =view_region(track_file,strand_to_flag[use_strand],region)
         sout,err = ps.communicate() # get stdout, stderr
         ## CHECK TO MAKE SURE THE REFERENCE GENOME CHROMOSOME IS FINE.
         if len(err)>0: # is there anytihn in stder?
