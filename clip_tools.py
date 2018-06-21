@@ -745,4 +745,3 @@ def easylocation(location,to_easy=False):
         stop = remainder.split("-")[1].replace(",","")
         return chrom,int(start),int(stop)
 
-

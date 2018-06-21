@@ -142,11 +142,3 @@ class Graphy():
         set a location in the format chrN:100-500
         '''
         self.chrom, self.start, self.stop = ct.easylocation(location)
-
-
-
-
-
-
-
-
